@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Home Page{% endblock %}
+{%block stylesheets%}{%endblock%}
+{% block content %}
+<h1 class="d-flex justify-content-center">Test</h1>
+
+{% endblock %}
+{%block scripts%}
+    <script src="{{url_for('static', filename='js/home.js')}}"></script>
+{%endblock%}
