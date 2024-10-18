@@ -1,4 +1,5 @@
 // worker.js
+//告诉worker如何处理主线程发来的消息
 self.onmessage = function(e) {
     const data = e.data;
     // 执行一些计算密集型的任务
