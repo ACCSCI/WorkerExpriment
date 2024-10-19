@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
         workerList = [];
         workerNum = 5
         dataList=[90000,98999,10000,12314,124144]
-        promises = runWorkerWithMultiPromise(workerList, workerNum, 'static/js/worker.js', dataList);
+        promises = runWorkerWithMultiPromise(workerList, 'static/js/worker.js', dataList);
         monitorPromises(promises,workerList);
     } else {
         console.log('Your browser doesn\'t support web workers.');
@@ -60,8 +60,9 @@ function runWorkerWithPromiseList(workerList, workerNum, workerScript, data) {
     return Promise.all(promises);
 }
 
-function runWorkerWithMultiPromise(workerList, workerNum, workerScript, dataList) {//
+function runWorkerWithMultiPromise(workerList,workerScript, dataList) {//
     const promises = [];
+    const workerNum = dataList.length;
     for (let i = 0; i < workerNum; i++) {
         const myWorker = new Worker(workerScript);
         const promise = new Promise((resolve, reject) => {
@@ -95,11 +96,15 @@ function terminateWorkers(workerList) {
 
 async function monitorPromises(promises,workerList)//监控promise返回状态，不需要等待所有进程完成就可以执行更新数据操作
 {
-    for (promise of promises) {
+    for (const promise of promises) {
         await promise;//等待每个promise完成
         console.log('A worker has finished.');
     }
-    await Promise.all(promises);
-    console.log('All Workers has finished.');
+    try{
+        await Promise.all(promises);
+    }catch (error){
+        console.log('Error occurred',error);
+    }
+    console.log('All Workers have finished.');
     terminateWorkers(workerList);
 }
